@@ -24,6 +24,12 @@ public class Laser : Obstacle, IMoveable
 {
     private PictureBox _laserPictureBox;
     private Size _screenSize;
+    private int _flag = 0;
+    public int Flag
+    {
+        get { return this._flag; }
+        set { _flag = value; }
+    }
     public Laser(Size screenSize) 
     {
         // Initialize screenSize client
@@ -45,13 +51,23 @@ public class Laser : Obstacle, IMoveable
 
     public override void Move()
     {
-        if(_laserPictureBox.Location.Y == _screenSize.Height / 5)
+        if (_flag == 0)
         {
+            // Remove pointer syntax
             _laserPictureBox.Location = new Point(_laserPictureBox.Location.X, _laserPictureBox.Location.Y + Speed);
+            if (_laserPictureBox.Location.Y == _screenSize.Height / 5)
+            {
+                _flag = 1;
+            }
         }
-        if (_laserPictureBox.Location.Y == _screenSize.Height - _screenSize.Height / 5)
+        else
         {
+            // Remove pointer syntax
             _laserPictureBox.Location = new Point(_laserPictureBox.Location.X, _laserPictureBox.Location.Y - Speed);
+            if (_laserPictureBox.Location.Y == _screenSize.Height - _screenSize.Height / 5)
+            {
+                _flag = 0;
+            }
         }
     }
 

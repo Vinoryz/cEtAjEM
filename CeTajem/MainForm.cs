@@ -13,7 +13,10 @@ namespace CeTajem
         private Background _background;
         private Character _character;
         private Laser _obstacle;
-        private bool _goUp, _goDown;
+
+        // Replace pointer with boolean fields
+        private bool _goUp;
+        private bool _goDown;
 
         public MainForm()
         {
@@ -43,12 +46,12 @@ namespace CeTajem
             this.KeyUp += OnKeyUp;
 
             Timer timer = new Timer();
-            timer.Interval = 1000/150;
-            timer.Tick += new EventHandler(UpdatePosition);
+            timer.Interval = 1000 / 150;
+            timer.Tick += UpdatePosition;
             timer.Start();
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object? sender, KeyEventArgs e)
         {
             // Menentukan tombol mana yang ditekan dan mengubah nilai boolean sesuai tombol
             if (e.KeyCode == Keys.Space)
@@ -58,7 +61,7 @@ namespace CeTajem
             }
         }
 
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        private void OnKeyUp(object? sender, KeyEventArgs e)
         {
             // Mengatur kembali nilai boolean saat tombol dilepaskan
             if (e.KeyCode == Keys.Space)
@@ -68,7 +71,7 @@ namespace CeTajem
             }
         }
 
-        private void UpdatePosition(object sender, EventArgs e)
+        private void UpdatePosition(object? sender, EventArgs e)
         {
             // Looping naik turun obstacle
             _obstacle.Move();
