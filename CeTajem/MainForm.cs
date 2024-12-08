@@ -12,6 +12,7 @@ namespace CeTajem
     {
         private Background _background;
         private Character _character;
+        private Laser _obstacle;
         private bool _goUp, _goDown;
 
         public MainForm()
@@ -22,14 +23,18 @@ namespace CeTajem
             // Mendapatkan maksimal screen size klien
             var screenBounds = Screen.PrimaryScreen.WorkingArea;
 
-            // Set the form's size to match the screen size
+            // Set the form's size to match the client screen size
             this.Size = screenBounds.Size;
 
             // Initialize Character
             _character = new Character(this.ClientSize);
             this.Controls.Add(_character.GetPictureBox());
 
-            // Initialize Background
+            // Initialize obstacle
+            _obstacle = new Laser(this.ClientSize);
+            this.Controls.Add(_obstacle.GetPictureBox());
+
+            // Initialize Background (paling bawah)
             _background = new Background(this.ClientSize);
             this.Controls.Add(_background.GetPictureBox());
 
@@ -41,7 +46,6 @@ namespace CeTajem
             timer.Interval = 1000/150;
             timer.Tick += new EventHandler(UpdatePosition);
             timer.Start();
-
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -66,6 +70,9 @@ namespace CeTajem
 
         private void UpdatePosition(object sender, EventArgs e)
         {
+            // Looping naik turun obstacle
+            _obstacle.Move();
+
             // Move the object based on which keys are pressed
             if (_goUp) _character.MoveUp();
             if (_goDown) _character.MoveDown(this.ClientSize.Height);  // Use ClientSize.Height
