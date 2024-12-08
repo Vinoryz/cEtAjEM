@@ -62,7 +62,7 @@ public class Missile : Obstacle, IMoveable
 
     public override void Move()
     {
-        _laserPictureBox.Location = new Point(_laserPictureBox.Location.X - 1, _laserPictureBox.Location.Y);
+        _laserPictureBox.Location = new Point(_laserPictureBox.Location.X - 5, _laserPictureBox.Location.Y);
         if (_flag == 0)
         {
             // Remove pointer syntax

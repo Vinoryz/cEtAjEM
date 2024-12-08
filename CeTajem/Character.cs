@@ -56,4 +56,8 @@ public class Character
             _charPictureBox.Location = new Point(_charPictureBox.Location.X, _charPictureBox.Location.Y + _moveSpeed);
         }
     }
+    public bool IsCollidedWith(Obstacle obstacle)
+    {
+        return obstacle.GetPictureBox().Bounds.IntersectsWith(this.GetPictureBox().Bounds);
+    }
 }

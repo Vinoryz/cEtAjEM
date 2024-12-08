@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,20 +10,26 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace CeTajem
 {
-    public class MainForm : Form
+    public class GameForm : Form
     {
         private Background _background;
         private Character _character;
         private Missile _obstacle;
+        private SoundPlayer _missileSound;
 
         // Replace pointer with boolean fields
         private bool _goUp;
         private bool _goDown;
 
-        public MainForm()
+        public GameForm()
         {
+            // Initialize Game Form
             this.WindowState = FormWindowState.Maximized;
             this.Text = "Kudanil Terbang";
+
+            // Initialize collision missile sound with character
+            MemoryStream _missileSoundStream = new MemoryStream(Resource.missile_boom);
+            _missileSound = new SoundPlayer(_missileSoundStream);
 
             // Mendapatkan maksimal screen size klien
             var screenBounds = Screen.PrimaryScreen.WorkingArea;
@@ -45,6 +53,7 @@ namespace CeTajem
             this.KeyDown += OnKeyDown;
             this.KeyUp += OnKeyUp;
 
+            // Initialize loop game and FPS
             Timer timer = new Timer();
             timer.Interval = 1000 / 150;
             timer.Tick += UpdatePosition;
@@ -79,6 +88,19 @@ namespace CeTajem
             // Move the object based on which keys are pressed
             if (_goUp) _character.MoveUp();
             if (_goDown) _character.MoveDown(this.ClientSize.Height);  // Use ClientSize.Height
+
+            // Checking if the character is collide with missile
+            if (_character.IsCollidedWith(_obstacle))
+            {
+                _missileSound.Play();
+
+                // GameOver Form Pop Up
+                // GameOverForm gameOverForm = new GameOverForm();
+                // gameOverForm.Show();
+
+                // Making character dead
+                this.Close();
+            }
         }
     }
 }
