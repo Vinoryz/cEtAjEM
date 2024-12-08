@@ -63,6 +63,16 @@ namespace CeTajem {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] missile_kudanil {
+            get {
+                object obj = ResourceManager.GetObject("missile_kudanil", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] window_background {
             get {
                 object obj = ResourceManager.GetObject("window_background", resourceCulture);

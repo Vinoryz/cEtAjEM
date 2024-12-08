@@ -12,7 +12,7 @@ namespace CeTajem
     {
         private Background _background;
         private Character _character;
-        private Laser _obstacle;
+        private Missile _obstacle;
 
         // Replace pointer with boolean fields
         private bool _goUp;
@@ -34,7 +34,7 @@ namespace CeTajem
             this.Controls.Add(_character.GetPictureBox());
 
             // Initialize obstacle
-            _obstacle = new Laser(this.ClientSize);
+            _obstacle = new Missile(this.ClientSize);
             this.Controls.Add(_obstacle.GetPictureBox());
 
             // Initialize Background (paling bawah)

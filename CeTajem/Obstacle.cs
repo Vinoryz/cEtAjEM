@@ -20,18 +20,25 @@ public abstract class Obstacle : IMoveable
     public abstract PictureBox GetPictureBox();
 }   
 
-public class Laser : Obstacle, IMoveable
+public class Missile : Obstacle, IMoveable
 {
     private PictureBox _laserPictureBox;
     private Size _screenSize;
     private int _flag = 0;
+    private Image _spriteSheet;
     public int Flag
     {
         get { return this._flag; }
         set { _flag = value; }
     }
-    public Laser(Size screenSize) 
+    public Missile(Size screenSize) 
     {
+        // Import missile images
+        using (MemoryStream ms = new MemoryStream(Resource.missile_kudanil))
+        {
+            _spriteSheet = Image.FromStream(ms);
+        }
+
         // Initialize screenSize client
         _screenSize = screenSize;
 
@@ -39,9 +46,13 @@ public class Laser : Obstacle, IMoveable
         _laserPictureBox = new PictureBox()
         {
             Size = new Size(50, 50),
-            BackColor = Color.Gray,
+            SizeMode = PictureBoxSizeMode.StretchImage,
             Location = new Point(_screenSize.Width-(_screenSize.Width / 7), _screenSize.Height / 2),
+            Image = _spriteSheet,
         };
+
+        // Ganti speed laser jadi 20
+        Speed = 5;
     }
 
     public override PictureBox GetPictureBox()
@@ -51,11 +62,13 @@ public class Laser : Obstacle, IMoveable
 
     public override void Move()
     {
+        _laserPictureBox.Location = new Point(_laserPictureBox.Location.X - 1, _laserPictureBox.Location.Y);
         if (_flag == 0)
         {
             // Remove pointer syntax
             _laserPictureBox.Location = new Point(_laserPictureBox.Location.X, _laserPictureBox.Location.Y + Speed);
-            if (_laserPictureBox.Location.Y == _screenSize.Height / 5)
+            
+            if (_laserPictureBox.Location.Y >= (_screenSize.Height - (_screenSize.Height/5)))
             {
                 _flag = 1;
             }
@@ -64,7 +77,7 @@ public class Laser : Obstacle, IMoveable
         {
             // Remove pointer syntax
             _laserPictureBox.Location = new Point(_laserPictureBox.Location.X, _laserPictureBox.Location.Y - Speed);
-            if (_laserPictureBox.Location.Y == _screenSize.Height - _screenSize.Height / 5)
+            if (_laserPictureBox.Location.Y <= _screenSize.Height / 5)
             {
                 _flag = 0;
             }
