@@ -14,7 +14,7 @@ namespace CeTajem
     {
         private Background _background;
         private Character _character;
-        private Missile _obstacle;
+        private Missile _missile;
         private SoundPlayer _missileSound;
 
         // Replace pointer with boolean fields
@@ -25,7 +25,7 @@ namespace CeTajem
         {
             // Initialize Game Form
             this.WindowState = FormWindowState.Maximized;
-            this.Text = "Kudanil Terbang";
+            this.Text = "JetMenyenangkan";
 
             // Initialize collision missile sound with character
             MemoryStream _missileSoundStream = new MemoryStream(Resource.missile_boom);
@@ -42,8 +42,8 @@ namespace CeTajem
             this.Controls.Add(_character.GetPictureBox());
 
             // Initialize obstacle
-            _obstacle = new Missile(this.ClientSize);
-            this.Controls.Add(_obstacle.GetPictureBox());
+            _missile = new Missile(this.ClientSize);
+            this.Controls.Add(_missile.GetPictureBox());
 
             // Initialize Background (paling bawah)
             _background = new Background(this.ClientSize);
@@ -83,24 +83,43 @@ namespace CeTajem
         private void UpdatePosition(object? sender, EventArgs e)
         {
             // Looping naik turun obstacle
-            _obstacle.Move();
+            _missile.Move();
 
             // Move the object based on which keys are pressed
             if (_goUp) _character.MoveUp();
             if (_goDown) _character.MoveDown(this.ClientSize.Height);  // Use ClientSize.Height
 
             // Checking if the character is collide with missile
-            if (_character.IsCollidedWith(_obstacle))
+            if (_character.IsCollidedWith(_missile))
             {
                 _missileSound.Play();
 
-                // GameOver Form Pop Up
-                // GameOverForm gameOverForm = new GameOverForm();
-                // gameOverForm.Show();
+                // Destroy missile picture box
+                this.Controls.Remove(_missile.GetPictureBox());
 
-                // Making character dead
+                // Close game form
                 this.Close();
             }
+            if (_missile.IsOutOfSky(this.ClientSize))
+            {
+                GenerateMissile();
+            }
+        }
+        public void GenerateMissile()
+        {
+            if (_missile != null)
+            {
+                // Remove missile
+                this.Controls.Remove(_missile.GetPictureBox());\
+                // Remove background
+                this.Controls.Remove(_background.GetPictureBox());
+            }
+            // Spawn new missile
+            _missile = new Missile(this.ClientSize);
+            this.Controls.Add(_missile.GetPictureBox());
+            // Spawn background again
+            _background = new Background(this.ClientSize);
+            this.Controls.Add(_background.GetPictureBox());
         }
     }
 }
