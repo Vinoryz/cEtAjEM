@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CeTajem;
-
 public class MainMenu : Form
 {
     private Button startGameButton;
@@ -26,6 +25,8 @@ public class MainMenu : Form
         // Menangani event KeyDown pada Form
         this.KeyDown += MainMenu_KeyDown;
         this.KeyPreview = true; // Pastikan form menerima event KeyDown walaupun kontrol lain yang memiliki fokus
+
+        HighScoreForm.ReadHighscore();
     }
     private void InitializeControls()
     {

@@ -73,6 +73,7 @@ namespace CeTajem
             // Initialize Keyboard Event Handling
             this.KeyDown += OnKeyDown;
             this.KeyUp += OnKeyUp;
+            // this.FormClosed +=
 
             // Initialize loop game and FPS
             Timer timer = new Timer();
@@ -121,8 +122,8 @@ namespace CeTajem
                 // Destroy missile picture box
                 this.Controls.Remove(_missile.GetPictureBox());
 
-                // Close game form
-                this.Close();
+                // panggil fungsi end game
+                EndGame();
             }
 
             // Checking if the character is collide with coin
@@ -173,11 +174,18 @@ namespace CeTajem
             _coin = new Coin(this.ClientSize);
             this.Controls.Add(_coin.GetPictureBox());
         }
-        
+
         public void UpdateScore()
         {
             _score += 1;
             _scoreLabel.Text = "Score: " + _score;
+        }
+        public void EndGame()
+        {
+            // Close game form
+            this.Close();
+
+            HighScoreForm.AddHighscore(_score);
         }
     }
 }
