@@ -60,4 +60,8 @@ public class Character
     {
         return obstacle.GetPictureBox().Bounds.IntersectsWith(this.GetPictureBox().Bounds);
     }
+    public bool IsCollidedWith(Coin coin)
+    {
+        return coin.GetPictureBox().Bounds.IntersectsWith(this.GetPictureBox().Bounds);
+    }
 }

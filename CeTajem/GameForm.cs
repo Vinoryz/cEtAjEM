@@ -7,29 +7,50 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
+using Label = System.Windows.Forms.Label;
 
 namespace CeTajem
 {
     public class GameForm : Form
     {
+        private Label _scoreLabel;
         private Background _background;
         private Character _character;
         private Missile _missile;
+        private Coin _coin;
         private SoundPlayer _missileSound;
+        private SoundPlayer _coinSound;
+        private int _score;
 
         // Replace pointer with boolean fields
         private bool _goUp;
         private bool _goDown;
-
         public GameForm()
         {
             // Initialize Game Form
             this.WindowState = FormWindowState.Maximized;
             this.Text = "JetMenyenangkan";
 
+            // Intialize score label
+            _score = 0;
+            _scoreLabel = new Label
+            {
+                Text = "Score: 0",
+                Location = new Point(10, 10),
+                Font = new Font("Arial", 16),
+                ForeColor = Color.Black,
+                Size = new Size(200, 50),
+                BackColor = Color.Transparent,
+            };
+            this.Controls.Add(_scoreLabel);
+
             // Initialize collision missile sound with character
             MemoryStream _missileSoundStream = new MemoryStream(Resource.missile_boom);
             _missileSound = new SoundPlayer(_missileSoundStream);
+
+            // Initialize collision missile sound with character
+            MemoryStream _coinSoundStream = new MemoryStream(Resource.coin_sound);
+            _coinSound = new SoundPlayer(_coinSoundStream);
 
             // Mendapatkan maksimal screen size klien
             var screenBounds = Screen.PrimaryScreen.WorkingArea;
@@ -41,13 +62,13 @@ namespace CeTajem
             _character = new Character(this.ClientSize);
             this.Controls.Add(_character.GetPictureBox());
 
-            // Initialize obstacle
+            // Initialize Missile
             _missile = new Missile(this.ClientSize);
             this.Controls.Add(_missile.GetPictureBox());
 
-            // Initialize Background (paling bawah)
-            _background = new Background(this.ClientSize);
-            this.Controls.Add(_background.GetPictureBox());
+            // Initialize Coin
+            _coin = new Coin(this.ClientSize);
+            this.Controls.Add(_coin.GetPictureBox());
 
             // Initialize Keyboard Event Handling
             this.KeyDown += OnKeyDown;
@@ -85,6 +106,9 @@ namespace CeTajem
             // Looping naik turun obstacle
             _missile.Move();
 
+            // Looping gerak coin
+            _coin.Move();
+
             // Move the object based on which keys are pressed
             if (_goUp) _character.MoveUp();
             if (_goDown) _character.MoveDown(this.ClientSize.Height);  // Use ClientSize.Height
@@ -100,9 +124,26 @@ namespace CeTajem
                 // Close game form
                 this.Close();
             }
-            if (_missile.IsOutOfSky(this.ClientSize))
+
+            // Checking if the character is collide with coin
+            if (_character.IsCollidedWith(_coin))
+            {
+                // Destroy coin picture box
+                this.Controls.Remove(_coin.GetPictureBox());
+                _coinSound.Play();
+                UpdateScore();
+            }
+
+            // Cek apakah missile sudah keluar dari layar
+            if (_missile.IsOutOfScreen())
             {
                 GenerateMissile();
+            }
+
+            // Cek apakah coin sudah keluar
+            if (_coin.IsOutOfScreen())
+            {
+                GenerateCoin();
             }
         }
         public void GenerateMissile()
@@ -110,16 +151,30 @@ namespace CeTajem
             if (_missile != null)
             {
                 // Remove missile
-                this.Controls.Remove(_missile.GetPictureBox());\
-                // Remove background
-                this.Controls.Remove(_background.GetPictureBox());
+                this.Controls.Remove(_missile.GetPictureBox());
             }
+
             // Spawn new missile
             _missile = new Missile(this.ClientSize);
             this.Controls.Add(_missile.GetPictureBox());
-            // Spawn background again
-            _background = new Background(this.ClientSize);
-            this.Controls.Add(_background.GetPictureBox());
+        }
+        public void GenerateCoin()
+        {
+            if (_coin != null)
+            {
+                // Remove coin
+                this.Controls.Remove(_coin.GetPictureBox());
+            }
+
+            // Spawn new coin
+            _coin = new Coin(this.ClientSize);
+            this.Controls.Add(_coin.GetPictureBox());
+        }
+        
+        public void UpdateScore()
+        {
+            _score++;
+            _scoreLabel.Text = "Score: " + _score;
         }
     }
 }

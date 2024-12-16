@@ -22,6 +22,10 @@ public class MainMenu : Form
         this.Text = "Main Menu";
         this.Size = new Size(400, 300);
         this.StartPosition = FormStartPosition.CenterScreen;
+
+        // Menangani event KeyDown pada Form
+        this.KeyDown += MainMenu_KeyDown;
+        this.KeyPreview = true; // Pastikan form menerima event KeyDown walaupun kontrol lain yang memiliki fokus
     }
     private void InitializeControls()
     {
@@ -71,5 +75,15 @@ public class MainMenu : Form
     private void ExitButton_Click(object sender, EventArgs e)
     {
         Application.Exit();
+    }
+
+    private void MainMenu_KeyDown(object sender, KeyEventArgs e)
+    {
+        // Mengecek jika tombol yang ditekan adalah spasi
+        if (e.KeyCode == Keys.Space)
+        {
+            // Mencegah input spasi
+            e.SuppressKeyPress = true;
+        }
     }
 }

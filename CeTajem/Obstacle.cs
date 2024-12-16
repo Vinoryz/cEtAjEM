@@ -8,6 +8,7 @@ namespace CeTajem;
 
 public abstract class Obstacle : IMoveable
 {
+    public Random _random;
     public abstract void Move();
     // speed ke kiri, default = 10
     private int _speed = 10;
@@ -18,7 +19,7 @@ public abstract class Obstacle : IMoveable
     }
     public abstract void _damagePlayer();
     public abstract PictureBox GetPictureBox();
-}   
+}
 
 public class Missile : Obstacle, IMoveable
 {
@@ -26,13 +27,15 @@ public class Missile : Obstacle, IMoveable
     private Size _screenSize;
     private int _flag = 0;
     private Image _spriteSheet;
+
     public int Flag
     {
         get { return this._flag; }
         set { _flag = value; }
     }
-    public Missile(Size screenSize) 
+    public Missile(Size screenSize)
     {
+        _random = new Random();
         // Import missile images
         using (MemoryStream ms = new MemoryStream(Resource.missile_kudanil))
         {
@@ -47,7 +50,7 @@ public class Missile : Obstacle, IMoveable
         {
             Size = new Size(50, 50),
             SizeMode = PictureBoxSizeMode.StretchImage,
-            Location = new Point(_screenSize.Width-(_screenSize.Width / 7), _screenSize.Height / 2),
+            Location = new Point(screenSize.Width + 1, _random.Next(screenSize.Height / 5, screenSize.Height + screenSize.Height / 5)),
             Image = _spriteSheet,
         };
 
@@ -67,8 +70,8 @@ public class Missile : Obstacle, IMoveable
         {
             // Remove pointer syntax
             _missilePictureBox.Location = new Point(_missilePictureBox.Location.X, _missilePictureBox.Location.Y + Speed);
-            
-            if (_missilePictureBox.Location.Y >= (_screenSize.Height - (_screenSize.Height/5)))
+
+            if (_missilePictureBox.Location.Y >= (_screenSize.Height - (_screenSize.Height / 5)))
             {
                 _flag = 1;
             }
@@ -88,7 +91,7 @@ public class Missile : Obstacle, IMoveable
     {
         throw new NotImplementedException();
     }
-    public bool IsOutOfSky(Size gameFormSize)
+    public bool IsOutOfScreen()
     {
         return _missilePictureBox.Location.X < 0;
     }
