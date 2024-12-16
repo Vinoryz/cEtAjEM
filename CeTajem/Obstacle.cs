@@ -27,6 +27,7 @@ public class Missile : Obstacle, IMoveable
     private Size _screenSize;
     private int _flag = 0;
     private Image _spriteSheet;
+    private int _spawnY;
 
     public int Flag
     {
@@ -45,12 +46,16 @@ public class Missile : Obstacle, IMoveable
         // Initialize screenSize client
         _screenSize = screenSize;
 
+        // Set random spawn point Y for missile
+        _spawnY = _random.Next(screenSize.Height / 5, screenSize.Height - screenSize.Height / 5);
+
+
         // Initialize picture box laser
         _missilePictureBox = new PictureBox()
         {
             Size = new Size(50, 50),
             SizeMode = PictureBoxSizeMode.StretchImage,
-            Location = new Point(screenSize.Width + 1, _random.Next(screenSize.Height / 5, screenSize.Height + screenSize.Height / 5)),
+            Location = new Point(screenSize.Width + 1, _spawnY),
             Image = _spriteSheet,
         };
 
@@ -71,7 +76,7 @@ public class Missile : Obstacle, IMoveable
             // Remove pointer syntax
             _missilePictureBox.Location = new Point(_missilePictureBox.Location.X, _missilePictureBox.Location.Y + Speed);
 
-            if (_missilePictureBox.Location.Y >= (_screenSize.Height - (_screenSize.Height / 5)))
+            if (_missilePictureBox.Location.Y >= _spawnY + 200)
             {
                 _flag = 1;
             }
@@ -80,7 +85,7 @@ public class Missile : Obstacle, IMoveable
         {
             // Remove pointer syntax
             _missilePictureBox.Location = new Point(_missilePictureBox.Location.X, _missilePictureBox.Location.Y - Speed);
-            if (_missilePictureBox.Location.Y <= _screenSize.Height / 5)
+            if (_missilePictureBox.Location.Y <= _spawnY - 200)
             {
                 _flag = 0;
             }

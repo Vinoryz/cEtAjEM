@@ -12,8 +12,10 @@ namespace CeTajem
         private Image _coinImage;
         private Size _screenSize;
         private int _speed = 5;
-        public Coin(Size screenSize)
+        private Random _random;
+        public Coin(Size screenSize) // Screensize 1904 x 1041
         {
+            _random = new Random();
             // Import coin image
             using (MemoryStream ms = new MemoryStream(Resource.coin))
             {
@@ -27,7 +29,7 @@ namespace CeTajem
             {
                 Size = new Size(50, 50),
                 SizeMode = PictureBoxSizeMode.StretchImage,
-                Location = new Point(_screenSize.Width - (_screenSize.Width / 7), _screenSize.Height / 2 + 50),
+                Location = new Point(screenSize.Width + 1, _random.Next(0, screenSize.Height)),
                 Image = _coinImage,
             };
         }

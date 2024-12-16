@@ -20,7 +20,8 @@ namespace CeTajem
         private Coin _coin;
         private SoundPlayer _missileSound;
         private SoundPlayer _coinSound;
-        private int _score;
+        private int _score = 0;
+        private bool _coinCollected = false;
 
         // Replace pointer with boolean fields
         private bool _goUp;
@@ -32,7 +33,6 @@ namespace CeTajem
             this.Text = "JetMenyenangkan";
 
             // Intialize score label
-            _score = 0;
             _scoreLabel = new Label
             {
                 Text = "Score: 0",
@@ -126,12 +126,14 @@ namespace CeTajem
             }
 
             // Checking if the character is collide with coin
-            if (_character.IsCollidedWith(_coin))
+            if (_character.IsCollidedWith(_coin) && !_coinCollected)
             {
                 // Destroy coin picture box
                 this.Controls.Remove(_coin.GetPictureBox());
                 _coinSound.Play();
                 UpdateScore();
+
+                _coinCollected = true;
             }
 
             // Cek apakah missile sudah keluar dari layar
@@ -141,9 +143,10 @@ namespace CeTajem
             }
 
             // Cek apakah coin sudah keluar
-            if (_coin.IsOutOfScreen())
+            if (_coin.IsOutOfScreen() || _coinCollected)
             {
                 GenerateCoin();
+                _coinCollected = false; // Reset the flag when generating a new coin
             }
         }
         public void GenerateMissile()
@@ -173,7 +176,7 @@ namespace CeTajem
         
         public void UpdateScore()
         {
-            _score++;
+            _score += 1;
             _scoreLabel.Text = "Score: " + _score;
         }
     }
