@@ -64,4 +64,8 @@ public class Character
     {
         return coin.GetPictureBox().Bounds.IntersectsWith(this.GetPictureBox().Bounds);
     }
+    public bool IsCollidedWith(Piggybank piggybank)
+    {
+        return piggybank.GetPictureBox().Bounds.IntersectsWith(this.GetPictureBox().Bounds);
+    }
 }

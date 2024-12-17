@@ -54,22 +54,20 @@ namespace CeTajem
             string filePath = GetHighscoreFilePath();
             if (File.Exists(filePath))
             {
-                _highestScore = int.Parse(File.ReadAllText(filePath));
+                string highscore = File.ReadAllText(filePath);
+                if (highscore == null) _highestScore = 0;
+                _highestScore = int.Parse(highscore);
             }
         }
 
         public static string GetHighscoreFilePath()
         {
-            // Option 1: User can specify a custom path
-            string customPath = Environment.GetEnvironmentVariable("HIGHSCORE_PATH");
-            if (!string.IsNullOrEmpty(customPath))
-            {
-                return Path.Combine(customPath, _fileName);
-            }
-
-            // Option 2: Application's local directory
+            // Application's local directory
             string appLocalPath = AppDomain.CurrentDomain.BaseDirectory;
-            return Path.Combine(appLocalPath, _fileName);
+
+            string parentDirectory = appLocalPath.Substring(0, appLocalPath.IndexOf("CeTajem") + "CeTajem".Length);
+
+            return Path.Combine(parentDirectory, _fileName);
         }
     }
 }

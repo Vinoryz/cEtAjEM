@@ -123,6 +123,26 @@ namespace CeTajem {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] piggybank {
+            get {
+                object obj = ResourceManager.GetObject("piggybank", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] piggybank_sound {
+            get {
+                object obj = ResourceManager.GetObject("piggybank_sound", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] window_background {
             get {
                 object obj = ResourceManager.GetObject("window_background", resourceCulture);

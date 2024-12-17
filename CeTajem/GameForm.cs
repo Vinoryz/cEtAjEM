@@ -19,11 +19,14 @@ namespace CeTajem
         private Missile _missile;
         private Laser _laser;
         private Coin _coin;
+        private Piggybank _piggybank;
         private SoundPlayer _missileSound;
         private SoundPlayer _laserSound;
         private SoundPlayer _coinSound;
+        private SoundPlayer _piggybankSound;
         private int _score = 0;
         private bool _coinCollected = false;
+        private bool _piggybankCollected = false;
 
         // Replace pointer with boolean fields
         private bool _goUp;
@@ -58,6 +61,10 @@ namespace CeTajem
             MemoryStream _coinSoundStream = new MemoryStream(Resource.coin_sound);
             _coinSound = new SoundPlayer(_coinSoundStream);
 
+            // Initialize collision coin sound with character
+            MemoryStream _piggybankSoundStream = new MemoryStream(Resource.piggybank_sound);
+            _piggybankSound = new SoundPlayer(_piggybankSoundStream);
+
             // Mendapatkan maksimal screen size client
             var screenBounds = Screen.PrimaryScreen.WorkingArea;
 
@@ -75,6 +82,10 @@ namespace CeTajem
             // Initialize Laser
             _laser = new Laser(this.ClientSize);
             this.Controls.Add(_laser.GetPictureBox());
+
+            // Initialize piggybank
+            _piggybank = new Piggybank(this.ClientSize);
+            this.Controls.Add(_piggybank.GetPictureBox());
 
             // Initialize Coin
             _coin = new Coin(this.ClientSize, 0, 0);
@@ -128,6 +139,9 @@ namespace CeTajem
             // Looping gerak coin
             _coin.Move();
 
+            // Looping naik turun dan maju piggybank
+            _piggybank.Move();
+
             // Move the object based on which keys are pressed
             if (_goUp) _character.MoveUp();
             if (_goDown) _character.MoveDown(this.ClientSize.Height);  // Use ClientSize.Height
@@ -164,9 +178,20 @@ namespace CeTajem
                 // Destroy coin picture box
                 this.Controls.Remove(_coin.GetPictureBox());
                 _coinSound.Play();
-                UpdateScore();
+                UpdateScore(1);
 
                 _coinCollected = true;
+            }
+
+            // Checking if the character is collide with piggybank
+            if (_character.IsCollidedWith(_piggybank) && !_piggybankCollected)
+            {
+                // Destroy coin picture box
+                this.Controls.Remove(_piggybank.GetPictureBox());
+                _piggybankSound.Play();
+                UpdateScore(100);
+
+                _piggybankCollected = true;
             }
 
             // Cek apakah missile sudah keluar dari layar
@@ -186,6 +211,13 @@ namespace CeTajem
             {
                 GenerateCoin();
                 _coinCollected = false; // Reset the flag when generating a new coin
+            }
+
+            // Cek apakah piggybank sudah keluar dari layar
+            if (_piggybank.IsOutOfScreen() || _piggybankCollected)
+            {
+                GeneratePiggybank();
+                _piggybankCollected = false; // Reset the flag when generating a new piggybank
             }
         }
         public void GenerateMissile()
@@ -211,6 +243,18 @@ namespace CeTajem
             // Spawn new laser
             _laser = new Laser(this.ClientSize);
             this.Controls.Add(_laser.GetPictureBox());
+        }
+        public void GeneratePiggybank()
+        {
+            if (_piggybank != null)
+            {
+                // Remove laser
+                this.Controls.Remove(_piggybank.GetPictureBox());
+            }
+
+            // Spawn new laser
+            _piggybank = new Piggybank(this.ClientSize);
+            this.Controls.Add(_piggybank.GetPictureBox());
         }
         public void GenerateCoin()
         {
@@ -241,9 +285,9 @@ namespace CeTajem
             this.Controls.Add(_coin.GetPictureBox());
         }
 
-        public void UpdateScore()
+        public void UpdateScore(int score)
         {
-            _score += 1;
+            _score += score;
             _scoreLabel.Text = "Score: " + _score;
         }
         public void EndGame()

@@ -139,4 +139,10 @@
   <data name="laser_zap" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\laser_zap.wav;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="piggybank" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\piggybank.jpg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="piggybank_sound" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\piggybank_sound.wav;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

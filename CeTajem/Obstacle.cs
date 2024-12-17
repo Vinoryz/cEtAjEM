@@ -27,11 +27,6 @@ public class Missile : Obstacle, IMoveable
     private PictureBox _missilePictureBox;
     private int _flag = 0;
     private Image _missileImage;
-    public int Flag
-    {
-        get { return this._flag; }
-        set { _flag = value; }
-    }
     public Missile(Size screenSize)
     {
         _random = new Random();
