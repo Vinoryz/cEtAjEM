@@ -36,6 +36,7 @@ namespace CeTajem
             // Initialize Game Form
             this.WindowState = FormWindowState.Maximized;
             this.Text = "JetMenyenangkan";
+            this.BackColor = ColorTranslator.FromHtml("#34e1eb");
 
             // Intialize score label
             _scoreLabel = new Label
