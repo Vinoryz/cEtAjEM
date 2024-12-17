@@ -9,7 +9,7 @@ namespace CeTajem;
 public abstract class Obstacle : IMoveable
 {
     protected Size _screenSize;
-    protected int _spawnY;
+    public static int _spawnY;
     public Random _random;
     public abstract void Move();
     // speed ke kiri, default = 10
@@ -68,7 +68,7 @@ public class Missile : Obstacle, IMoveable
 
     public override void Move()
     {
-        _missilePictureBox.Location = new Point(_missilePictureBox.Location.X - 5, _missilePictureBox.Location.Y);
+        _missilePictureBox.Location = new Point(_missilePictureBox.Location.X - 10, _missilePictureBox.Location.Y);
         if (_flag == 0)
         {
             // Remove pointer syntax
@@ -91,7 +91,7 @@ public class Missile : Obstacle, IMoveable
     }
     public bool IsOutOfScreen()
     {
-        return _missilePictureBox.Location.X < 0;
+        return _missilePictureBox.Location.X < -50;
     }
 }
 
@@ -112,7 +112,7 @@ public class Laser : Obstacle, IMoveable
         _screenSize = screenSize;
 
         // Set random spawn point Y for laser
-        _spawnY = _random.Next(screenSize.Height / 5, screenSize.Height - screenSize.Height / 5);
+        _spawnY = _random.Next(0, screenSize.Height - screenSize.Height / 3);
 
 
         // Initialize picture box laser
@@ -138,6 +138,6 @@ public class Laser : Obstacle, IMoveable
     }
     public bool IsOutOfScreen()
     {
-        return _laserPictureBox.Location.X < 0;
+        return _laserPictureBox.Location.X < -50;
     }
 }

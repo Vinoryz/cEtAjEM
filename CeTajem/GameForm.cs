@@ -77,7 +77,7 @@ namespace CeTajem
             this.Controls.Add(_laser.GetPictureBox());
 
             // Initialize Coin
-            _coin = new Coin(this.ClientSize);
+            _coin = new Coin(this.ClientSize, 0, 0);
             this.Controls.Add(_coin.GetPictureBox());
 
             // Initialize Keyboard Event Handling
@@ -220,8 +220,24 @@ namespace CeTajem
                 this.Controls.Remove(_coin.GetPictureBox());
             }
 
-            // Spawn new coin
-            _coin = new Coin(this.ClientSize);
+            // Determine which obstacle to use based on current state
+            int obstacleSpawnY;
+            int obstacleHeight;
+
+            // Use laser if it exists and is more recently spawned
+            if (_laser.GetPictureBox().Location.X > _missile.GetPictureBox().Location.X)
+            {
+                obstacleSpawnY = _laser.GetPictureBox().Location.Y;
+                obstacleHeight = _laser.GetPictureBox().Height;
+            }
+            else
+            {
+                obstacleSpawnY = _missile.GetPictureBox().Location.Y;
+                obstacleHeight = _missile.GetPictureBox().Height;
+            }
+
+            // Spawn new coin, passing obstacle spawn Y and height
+            _coin = new Coin(this.ClientSize, obstacleSpawnY, obstacleHeight);
             this.Controls.Add(_coin.GetPictureBox());
         }
 

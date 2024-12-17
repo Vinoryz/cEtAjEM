@@ -12,7 +12,7 @@ namespace CeTajem
     public class HighScoreForm : Form
     {
         private static int? _highestScore;
-        private static string _filePath = @"D:\Informatics Semester 3\@Pemrograman Berorientasi Obyek B by Pak Rizky Januar\cEtAjEM\CeTajem\Highscore.txt";
+        private static string _fileName = "Highscore.txt";
 
         public HighScoreForm()
         {
@@ -24,32 +24,52 @@ namespace CeTajem
             this.Text = "High Scores";
             this.Size = new Size(400, 300);
             this.StartPosition = FormStartPosition.CenterScreen;
-
             Label label = new Label
             {
-                Text = "High Scores : " + _highestScore.ToString(),
+                Text = "High Scores: " + (_highestScore?.ToString() ?? "Not Set"),
                 Font = new Font("Arial", 18, FontStyle.Bold),
                 AutoSize = true,
                 Location = new Point(10, 10)
             };
             this.Controls.Add(label);
         }
+
         public static void AddHighscore(int score)
         {
-            if (_highestScore == null) _highestScore = score;
-            else
+            if (!_highestScore.HasValue || score > _highestScore.Value)
             {
-                if (score > _highestScore) _highestScore = score;
+                _highestScore = score;
+                WriteHighscore();
             }
-            HighScoreForm.WriteHighscore();
         }
+
         public static void WriteHighscore()
         {
-            File.WriteAllText(_filePath, _highestScore.ToString());
+            string filePath = GetHighscoreFilePath();
+            File.WriteAllText(filePath, _highestScore.ToString());
         }
+
         public static void ReadHighscore()
         {
-            _highestScore = int.Parse(File.ReadAllText(_filePath));
+            string filePath = GetHighscoreFilePath();
+            if (File.Exists(filePath))
+            {
+                _highestScore = int.Parse(File.ReadAllText(filePath));
+            }
+        }
+
+        public static string GetHighscoreFilePath()
+        {
+            // Option 1: User can specify a custom path
+            string customPath = Environment.GetEnvironmentVariable("HIGHSCORE_PATH");
+            if (!string.IsNullOrEmpty(customPath))
+            {
+                return Path.Combine(customPath, _fileName);
+            }
+
+            // Option 2: Application's local directory
+            string appLocalPath = AppDomain.CurrentDomain.BaseDirectory;
+            return Path.Combine(appLocalPath, _fileName);
         }
     }
 }
