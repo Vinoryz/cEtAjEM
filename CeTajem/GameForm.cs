@@ -14,7 +14,6 @@ namespace CeTajem
     public class GameForm : Form
     {
         private Label _scoreLabel;
-        private Background _background;
         private Character _character;
         private Missile _missile;
         private Laser _laser;
@@ -293,7 +292,7 @@ namespace CeTajem
         }
         public void EndGame()
         {
-            // Close game form
+            // tutup game form
             this.Close();
 
             HighScoreForm.AddHighscore(_score);
