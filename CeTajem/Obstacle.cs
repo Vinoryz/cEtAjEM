@@ -8,6 +8,8 @@ namespace CeTajem;
 
 public abstract class Obstacle : IMoveable
 {
+    protected Size _screenSize;
+    protected int _spawnY;
     public Random _random;
     public abstract void Move();
     // speed ke kiri, default = 10
@@ -17,18 +19,14 @@ public abstract class Obstacle : IMoveable
         get { return _speed; }
         set { _speed = value; }
     }
-    public abstract void _damagePlayer();
     public abstract PictureBox GetPictureBox();
 }
 
 public class Missile : Obstacle, IMoveable
 {
     private PictureBox _missilePictureBox;
-    private Size _screenSize;
     private int _flag = 0;
-    private Image _spriteSheet;
-    private int _spawnY;
-
+    private Image _missileImage;
     public int Flag
     {
         get { return this._flag; }
@@ -40,7 +38,7 @@ public class Missile : Obstacle, IMoveable
         // Import missile images
         using (MemoryStream ms = new MemoryStream(Resource.missile_kudanil))
         {
-            _spriteSheet = Image.FromStream(ms);
+            _missileImage = Image.FromStream(ms);
         }
 
         // Initialize screenSize client
@@ -56,10 +54,10 @@ public class Missile : Obstacle, IMoveable
             Size = new Size(50, 50),
             SizeMode = PictureBoxSizeMode.StretchImage,
             Location = new Point(screenSize.Width + 1, _spawnY),
-            Image = _spriteSheet,
+            Image = _missileImage,
         };
 
-        // Ganti speed laser jadi 20
+        // Ganti speed missile jadi 5
         Speed = 5;
     }
 
@@ -91,13 +89,55 @@ public class Missile : Obstacle, IMoveable
             }
         }
     }
-
-    public override void _damagePlayer()
-    {
-        throw new NotImplementedException();
-    }
     public bool IsOutOfScreen()
     {
         return _missilePictureBox.Location.X < 0;
+    }
+}
+
+public class Laser : Obstacle, IMoveable
+{
+    private PictureBox _laserPictureBox;
+    private Image _laserImage;
+    public Laser(Size screenSize)
+    {
+        _random = new Random();
+        // Import laser image
+        using (MemoryStream ms = new MemoryStream(Resource.laser_on))
+        {
+            _laserImage = Image.FromStream(ms);
+        }
+
+        // Initialize screenSize client
+        _screenSize = screenSize;
+
+        // Set random spawn point Y for laser
+        _spawnY = _random.Next(screenSize.Height / 5, screenSize.Height - screenSize.Height / 5);
+
+
+        // Initialize picture box laser
+        _laserPictureBox = new PictureBox()
+        {
+            Size = new Size(50, 300),
+            SizeMode = PictureBoxSizeMode.StretchImage,
+            Location = new Point(screenSize.Width + 1, _spawnY),
+            Image = _laserImage,
+        };
+
+        // Ganti speed laser jadi 5
+        Speed = 5;
+    }
+    public override PictureBox GetPictureBox()
+    {
+        return _laserPictureBox;
+    }
+
+    public override void Move()
+    {
+        _laserPictureBox.Location = new Point(_laserPictureBox.Location.X - 5, _laserPictureBox.Location.Y);
+    }
+    public bool IsOutOfScreen()
+    {
+        return _laserPictureBox.Location.X < 0;
     }
 }

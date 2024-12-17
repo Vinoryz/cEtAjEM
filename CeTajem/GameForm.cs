@@ -17,8 +17,10 @@ namespace CeTajem
         private Background _background;
         private Character _character;
         private Missile _missile;
+        private Laser _laser;
         private Coin _coin;
         private SoundPlayer _missileSound;
+        private SoundPlayer _laserSound;
         private SoundPlayer _coinSound;
         private int _score = 0;
         private bool _coinCollected = false;
@@ -48,11 +50,15 @@ namespace CeTajem
             MemoryStream _missileSoundStream = new MemoryStream(Resource.missile_boom);
             _missileSound = new SoundPlayer(_missileSoundStream);
 
-            // Initialize collision missile sound with character
+            // Initialize collision laser sound with character
+            MemoryStream _laserSoundStream = new MemoryStream(Resource.laser_zap);
+            _laserSound = new SoundPlayer(_laserSoundStream);
+
+            // Initialize collision coin sound with character
             MemoryStream _coinSoundStream = new MemoryStream(Resource.coin_sound);
             _coinSound = new SoundPlayer(_coinSoundStream);
 
-            // Mendapatkan maksimal screen size klien
+            // Mendapatkan maksimal screen size client
             var screenBounds = Screen.PrimaryScreen.WorkingArea;
 
             // Set the form's size to match the client screen size
@@ -66,6 +72,10 @@ namespace CeTajem
             _missile = new Missile(this.ClientSize);
             this.Controls.Add(_missile.GetPictureBox());
 
+            // Initialize Laser
+            _laser = new Laser(this.ClientSize);
+            this.Controls.Add(_laser.GetPictureBox());
+
             // Initialize Coin
             _coin = new Coin(this.ClientSize);
             this.Controls.Add(_coin.GetPictureBox());
@@ -73,6 +83,11 @@ namespace CeTajem
             // Initialize Keyboard Event Handling
             this.KeyDown += OnKeyDown;
             this.KeyUp += OnKeyUp;
+
+            // Buat player jatuh pertama kali
+            _goDown = true;
+
+            // _goDown = true;
             // this.FormClosed +=
 
             // Initialize loop game and FPS
@@ -104,8 +119,11 @@ namespace CeTajem
 
         private void UpdatePosition(object? sender, EventArgs e)
         {
-            // Looping naik turun obstacle
+            // Looping naik turun dan maju missile
             _missile.Move();
+
+            // Looping maju laser
+            _laser.Move();
 
             // Looping gerak coin
             _coin.Move();
@@ -117,10 +135,24 @@ namespace CeTajem
             // Checking if the character is collide with missile
             if (_character.IsCollidedWith(_missile))
             {
+                // play missile sound
                 _missileSound.Play();
 
                 // Destroy missile picture box
                 this.Controls.Remove(_missile.GetPictureBox());
+
+                // panggil fungsi end game
+                EndGame();
+            }
+
+            // Checking if the character is collide with laser
+            if (_character.IsCollidedWith(_laser))
+            {
+                // play laser sound
+                _laserSound.Play();
+
+                // Destroy missile picture box
+                this.Controls.Remove(_laser.GetPictureBox());
 
                 // panggil fungsi end game
                 EndGame();
@@ -143,7 +175,13 @@ namespace CeTajem
                 GenerateMissile();
             }
 
-            // Cek apakah coin sudah keluar
+            // Cek apakah laser sudah keluar dari layar
+            if (_laser.IsOutOfScreen())
+            {
+                GenerateLaser();
+            }
+
+            // Cek apakah coin sudah keluar dari layar
             if (_coin.IsOutOfScreen() || _coinCollected)
             {
                 GenerateCoin();
@@ -161,6 +199,18 @@ namespace CeTajem
             // Spawn new missile
             _missile = new Missile(this.ClientSize);
             this.Controls.Add(_missile.GetPictureBox());
+        }
+        public void GenerateLaser()
+        {
+            if (_laser != null)
+            {
+                // Remove laser
+                this.Controls.Remove(_laser.GetPictureBox());
+            }
+
+            // Spawn new laser
+            _laser = new Laser(this.ClientSize);
+            this.Controls.Add(_laser.GetPictureBox());
         }
         public void GenerateCoin()
         {
